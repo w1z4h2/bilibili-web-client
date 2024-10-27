@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import UploadFile from './components/uploadFile.vue';
 
 </script>
 
 <template>
-  <h1>Welcome to BiliBili</h1>
+  <UploadFile />
 </template>
 
 <style scoped lang="scss">
