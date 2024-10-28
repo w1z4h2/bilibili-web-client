@@ -29,7 +29,7 @@ const createChunk = (file: File, index: number, chunkSize: number) => {
                 end,
                 index,
                 hash: spark.end(),
-                blob
+                blob,
             })
         }
         fileReader.readAsArrayBuffer(blob)

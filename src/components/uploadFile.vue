@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { UploadFilled } from '@element-plus/icons-vue'
+import SparkMD5 from "spark-md5"
 
 const CHUNK_SIZE = 1024 * 1024 * 10
 const THREAD_COUNT = navigator.hardwareConcurrency || 4
 
 const uploadFile = async ({ file }: { file: File }) => {
-  const chunks = await cutFile(file)
+  const result = await cutFile(file)
 }
 
 const cutFile = async (file: File) => {
   return new Promise((resolve, reject) => {
     const chunkCount = Math.ceil(file.size / CHUNK_SIZE)
     const threadChunkCount = Math.ceil(chunkCount / THREAD_COUNT)
-    const result: any[] = []
+    const result: {hash: string}[] = []
     let finshCount = 0
 
     for (let i = 0; i < THREAD_COUNT; i++) {
@@ -32,7 +33,14 @@ const cutFile = async (file: File) => {
         worker.terminate()
         finshCount++
         if (finshCount == THREAD_COUNT) {
-          resolve(result)
+          const totleHash = new SparkMD5()
+          for (let i = 0; i < result.length; i++) {
+            totleHash.append(result[i].hash)
+          }
+          resolve({
+            result,
+            totleHash: totleHash.end()
+          })
         }
       }
     }
